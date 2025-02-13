@@ -1,9 +1,10 @@
 from rest_framework import serializers, viewsets
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 from base.models import Staff
 from base.viewsets import IsGuardianOrStaff, IsStaff
 from .models import Homework
-
 
 class HomeworkSerializer(serializers.ModelSerializer):
     class Meta:
@@ -14,6 +15,7 @@ class HomeworkSerializer(serializers.ModelSerializer):
 class HomeworkViewSet(viewsets.ModelViewSet):
     queryset = Homework.objects.all()
     serializer_class = HomeworkSerializer
+    authentication_classes = [SessionAuthentication, BasicAuthentication, JWTAuthentication]
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:
