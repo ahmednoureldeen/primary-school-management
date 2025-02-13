@@ -1,0 +1,32 @@
+from rest_framework import serializers, viewsets
+
+from base.models import Staff
+from base.viewsets import IsGuardianOrStaff, IsStaff
+from .models import Homework
+
+
+class HomeworkSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Homework
+        fields = '__all__'
+
+
+class HomeworkViewSet(viewsets.ModelViewSet):
+    queryset = Homework.objects.all()
+    serializer_class = HomeworkSerializer
+
+    def get_permissions(self):
+        if self.action in ['create', 'update', 'partial_update', 'destroy']:
+            self.permission_classes = [IsStaff]
+        else:
+            self.permission_classes = [IsGuardianOrStaff]
+        return super().get_permissions()
+
+    def get_queryset(self):
+        user = self.request.user
+        if Staff.objects.filter(user=user).exists():
+            return Homework.objects.all()
+        guardian = user.guardian_profile
+        if guardian:
+            return Homework.objects.filter(student_group__students__guardianstudent__guardian=guardian).all()
+        return Homework.objects.none()
