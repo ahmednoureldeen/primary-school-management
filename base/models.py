@@ -21,9 +21,9 @@ class StudentGroup(models.Model):
 class Student(models.Model):
     first_name = models.CharField(max_length=100, null=False, blank=False)
     last_name = models.CharField(max_length=100, null=False, blank=False)
-    group = models.ForeignKey(StudentGroup, null=False, blank=False, on_delete=models.PROTECT)
+    group = models.ForeignKey(StudentGroup, null=False, blank=False, on_delete=models.PROTECT, related_name='students')
     date_of_birth = models.DateField(null=False, blank=False)
-    guardians = models.ManyToManyField(Guardian, through='GuardianStudent')
+    guardians = models.ManyToManyField(Guardian, through='GuardianStudent', related_name='students')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
