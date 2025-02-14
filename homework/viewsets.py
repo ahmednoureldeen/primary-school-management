@@ -2,7 +2,7 @@ from rest_framework import serializers, viewsets
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework_simplejwt.authentication import JWTAuthentication
 
-from base.models import Staff
+from base.models import Guardian, Staff
 from base.viewsets import IsGuardianOrStaff, IsStaff
 from .models import Homework
 
@@ -27,8 +27,7 @@ class HomeworkViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         user = self.request.user
         if Staff.objects.filter(user=user).exists():
-            return Homework.objects.all()
-        guardian = user.guardian_profile
-        if guardian:
-            return Homework.objects.filter(student_group__students__guardianstudent__guardian=guardian).all()
+            return Homework.objects.all()        
+        if Guardian.objects.filter(user=user).exists():
+            return Homework.objects.filter(student_group__students__guardianstudent__guardian=user.guardian_profile).all()
         return Homework.objects.none()
