@@ -12,6 +12,7 @@ services:
 
   web:
     build: .
+    image: school_management:v1
     command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     volumes:
       - .:/app
@@ -26,6 +27,35 @@ services:
       DB_PASSWORD: password
       DB_HOST: db
       DB_PORT: 5432
+      CELERY_BROKER_URL: "amqp://user:password@rabbitmq:5672/"
+      CELERY_RESULT_BACKEND: "rpc://"
+  
+  worker:
+    image: school_management:v1
+    command: ["celery", "-A", "school_management", "worker", "--loglevel=info"]
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - rabbitmq
+    environment:
+      DB_ENGINE: django.db.backends.postgresql
+      DB_NAME: school_management
+      DB_USER: user
+      DB_PASSWORD: password
+      DB_HOST: db
+      DB_PORT: 5432
+      CELERY_BROKER_URL: "amqp://user:password@rabbitmq:5672/"
+      CELERY_RESULT_BACKEND: "rpc://"
+
+  rabbitmq:
+    image: "rabbitmq:3-management"
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
 
 volumes:
   postgres_data:
