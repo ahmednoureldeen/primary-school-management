@@ -42,6 +42,7 @@ INSTALLED_APPS = [
 
     'base',
     'homework',
+    'django_elasticsearch_dsl',
 ]
 
 MIDDLEWARE = [
@@ -138,3 +139,13 @@ CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.environ.get('ELASTICSEARCH_HOST', 'http://localhost:9200'),
+        'http_auth': (
+            os.getenv('ELASTICSEARCH_USERNAME', 'elastic'),
+            os.getenv('ELASTICSEARCH_PASSWORD', 'changeme')
+        )
+    },
+}

@@ -19,6 +19,8 @@ from django.urls import include, path
 from rest_framework.routers import DefaultRouter
 
 from homework.viewsets import HomeworkViewSet
+from homework.urls import urlpatterns as homework_urlpatterns
+
 from base.viewsets import StudentGroupViewSet, StudentViewSet, GuardianViewSet, GuardianStudentViewSet
 
 # API Routing
@@ -33,4 +35,5 @@ router.register(r'guardian_student', GuardianStudentViewSet)
 urlpatterns = [
     path('api/v1/', include(router.urls)),
     path('admin/', admin.site.urls),
+    path('homework/', include(homework_urlpatterns)),
 ]

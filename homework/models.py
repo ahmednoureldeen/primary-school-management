@@ -1,9 +1,10 @@
 from django.db import models
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 
 from base.models import StudentGroup
 from .tasks import notify_guardians
+
 
 class Homework(models.Model):
     title = models.CharField(max_length=255)
