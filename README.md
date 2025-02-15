@@ -20,12 +20,12 @@ This is a Django-based web application for managing a primary school. It include
 
 2. **Build and run the Docker containers**:
     ```sh
-    docker-compose up --build
+    docker compose up --build
     ```
 
 3. **Create a superuser**:
     ```sh
-    docker-compose exec web python manage.py createsuperuser
+    docker compose exec web python manage.py createsuperuser
     ```
 
 4. **Access the application**:
@@ -35,7 +35,7 @@ This is a Django-based web application for managing a primary school. It include
 
 To run the tests, use the following command:
 ```sh
-docker-compose exec web pytest
+docker compose exec web pytest
 ```
 
 Alternatively to run the tests locally install the project requirements in your environment(use virtualenv for example)":
@@ -47,6 +47,14 @@ And run the test as follows:
 ```sh
 pytest
 ```
+
+To use the elasticsearch run the following command first:
+```sh
+docker compose exec web python manage.py search_index --rebuild
+```
+
+And use the url `localhost:8000/homework/search/?q=math&size=10&page=2` to search in homework title and description.
+Where `size` is for total number of results per page and page is the page number.
 
 
 Note: For testing; sending a task using celery is mocked for simplicity.
